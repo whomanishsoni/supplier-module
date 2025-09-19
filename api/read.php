@@ -66,8 +66,8 @@ $filteredStmt = $pdo->prepare($filteredSql);
 $filteredStmt->execute($params);
 $filteredRecords = $filteredStmt->fetchColumn();
 
-// Fetch data
-$sql = "SELECT * FROM suppliers $where ORDER BY $orderBy $orderDir LIMIT :start, :length";
+// Fetch data with explicit columns
+$sql = "SELECT id, name, email, phone, address, status, created_at FROM suppliers $where ORDER BY $orderBy $orderDir LIMIT :start, :length";
 $stmt = $pdo->prepare($sql);
 foreach ($params as $key => $value) {
     $stmt->bindValue($key, $value);
@@ -76,6 +76,10 @@ $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
 $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
 $stmt->execute();
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Debug: Log the data being returned
+// error_log(print_r($data, true)); // Uncomment to log to server error log
+// var_dump($data); // Uncomment to output to browser (for testing)
 
 echo json_encode([
     'draw' => (int)$draw,

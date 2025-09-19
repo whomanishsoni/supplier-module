@@ -9,7 +9,6 @@
     <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <link href="public/css/styles.css" rel="stylesheet">
 </head>
@@ -20,22 +19,24 @@
             <button id="addSupplierBtn" class="bg-blue-500 text-white px-3 py-2 rounded w-full sm:w-auto">Add Supplier</button>
             <button id="deleteAllBtn" class="bg-red-500 text-white px-3 py-2 rounded w-full sm:w-auto">Delete Selected (0)</button>
         </div>
-        <div class="mb-4 flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 items-start sm:items-center">
-            <div class="flex items-center gap-2">
-                <label for="statusFilter" class="text-sm font-medium">Status:</label>
-                <select id="statusFilter" class="px-2 py-1 border rounded text-sm">
-                    <option value="">All</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
-            </div>
-            <div class="flex items-center gap-2">
-                <label for="nameFilter" class="text-sm font-medium">Name:</label>
-                <input type="text" id="nameFilter" class="px-2 py-1 border rounded text-sm" placeholder="Enter name">
-            </div>
-            <div class="flex items-center gap-2">
-                <label for="emailFilter" class="text-sm font-medium">Email:</label>
-                <input type="text" id="emailFilter" class="px-2 py-1 border rounded text-sm" placeholder="Enter email">
+        <div class="mb-4 filter-container">
+            <div class="flex flex-nowrap items-center gap-2 sm:gap-4 overflow-x-auto pb-2">
+                <div class="flex items-center gap-2">
+                    <label for="statusFilter" class="text-sm font-medium">Status:</label>
+                    <select id="statusFilter" class="px-2 py-1 border rounded text-sm w-full sm:w-auto min-w-[120px]">
+                        <option value="">All</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label for="nameFilter" class="text-sm font-medium">Name:</label>
+                    <input type="text" id="nameFilter" class="px-2 py-1 border rounded text-sm w-full sm:w-auto min-w-[120px]" placeholder="Enter name">
+                </div>
+                <div class="flex items-center gap-2">
+                    <label for="emailFilter" class="text-sm font-medium">Email:</label>
+                    <input type="text" id="emailFilter" class="px-2 py-1 border rounded text-sm w-full sm:w-auto min-w-[120px]" placeholder="Enter email">
+                </div>
             </div>
         </div>
         <div class="table-responsive">
@@ -149,7 +150,6 @@
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
     <script src="public/js/scripts.js"></script>
 </body>
 </html>

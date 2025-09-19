@@ -8,7 +8,7 @@
 }
 
 .table th, .table td {
-    @apply px-2 py-1 sm:px-4 sm:py-2;
+    @apply px-2 py-1 sm:px-4 sm:py-2 text-sm;
 }
 
 .btn-action {
@@ -20,20 +20,28 @@
 }
 
 #statusFilter, #nameFilter, #emailFilter {
-    @apply px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-32 sm:w-40;
+    @apply px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-full sm:w-40;
 }
 
-/* Ensure fixed column alignment */
+/* Responsive table styling */
 table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
-    @apply top-1/2 transform -translate-y-1/2;
+    @apply top-1/2 transform -translate-y-1/2 text-blue-500;
 }
 
-table.dataTable th.dtfc-fixed-left,
-table.dataTable td.dtfc-fixed-left {
-    @apply bg-gray-50 z-10 border-r border-gray-300;
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control {
+    @apply relative;
+}
+
+/* Ensure checkbox and actions are visible */
+.dt-checkboxes {
+    @apply w-12 text-center;
 }
 
 @media (max-width: 640px) {
+    .table th, .table td {
+        @apply px-2 py-1 text-xs;
+    }
+
     .btn-action {
         @apply px-1 py-1 mr-1;
     }
@@ -42,13 +50,34 @@ table.dataTable td.dtfc-fixed-left {
         @apply text-base;
     }
     
-    #statusFilter, #nameFilter, #emailFilter {
-        @apply w-full;
+    .filter-container {
+        @apply flex flex-nowrap items-center overflow-x-auto pb-2;
     }
 
-    /* Adjust fixed column for mobile */
-    table.dataTable th.dtfc-fixed-left,
-    table.dataTable td.dtfc-fixed-left {
-        @apply min-w-[50px];
+    #statusFilter, #nameFilter, #emailFilter {
+        @apply w-full sm:w-auto min-w-[120px];
+    }
+
+    /* Adjust table for mobile */
+    table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
+        @apply text-blue-500 font-bold;
+    }
+
+    .dt-checkboxes {
+        @apply w-10;
+    }
+
+    /* Child row styling for mobile */
+    table.dataTable.dtr-inline.collapsed > tbody > tr > td.child {
+        @apply bg-gray-50 p-2;
+    }
+
+    table.dataTable.dtr-inline.collapsed > tbody > tr > td.child table {
+        @apply text-xs;
+    }
+
+    /* Ensure actions remain accessible on mobile */
+    table.dataTable.dtr-inline.collapsed > tbody > tr > td {
+        @apply p-1;
     }
 }

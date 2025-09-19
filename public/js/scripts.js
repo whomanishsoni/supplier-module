@@ -7,28 +7,42 @@ $(document).ready(function() {
     let table = $('#suppliersTable').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true, // Enable responsive extension
-        fixedColumns: {
-            leftColumns: 1 // Fix the first column (checkbox)
+        responsive: {
+            details: {
+                type: 'inline',
+                renderer: function(api, rowIdx, columns) {
+                    let data = '';
+                    $.each(columns, function(i, col) {
+                        if (col.columnIndex === 0 || col.columnIndex === 8 || col.hidden) return true; // Skip checkbox and Actions
+                        console.log('Column Index:', col.columnIndex, 'Title:', col.title, 'Data:', col.data); // Debug log
+                        data += '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
+                            '<td class="font-bold">' + col.title + ':</td>' +
+                            '<td>' + (col.data || 'N/A') + '</td>' +
+                            '</tr>';
+                    });
+                    return data ? $('<table class="w-full"/>').append(data) : false;
+                }
+            }
         },
         ajax: {
             url: 'api/read.php',
             type: 'GET',
-            data: function (d) {
+            data: function(d) {
                 d.status_filter = $('#statusFilter').val();
                 d.name_filter = $('#nameFilter').val();
                 d.email_filter = $('#emailFilter').val();
             }
         },
-        order: [[7, 'desc']], // Default sort by created_at (column index 7) in DESC order
+        order: [[7, 'desc']], // Default sort by created_at
         columns: [
             {
                 data: null,
                 render: function(data, type, row) {
-                    return `<input type="checkbox" class="select-row" value="${row.id}">`;
+                    return `<input type="checkbox" class="select-row" value="${row.id || ''}">`;
                 },
                 orderable: false,
-                responsivePriority: 10 // Low priority for collapsing
+                responsivePriority: 1,
+                className: 'dt-checkboxes'
             },
             {
                 data: null,
@@ -36,48 +50,41 @@ $(document).ready(function() {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 },
                 orderable: false,
-                responsivePriority: 2 // High priority to ensure S.No is visible on mobile
+                responsivePriority: 2
             },
-            { 
-                data: 'name',
-                responsivePriority: 1 // High priority, always visible
-            },
-            { 
-                data: 'email',
-                responsivePriority: 3 // High priority
-            },
-            { 
-                data: 'phone',
-                responsivePriority: 6 // Medium priority
-            },
-            { 
-                data: 'address',
-                responsivePriority: 7 // Medium priority
-            },
-            { 
-                data: 'status',
-                responsivePriority: 4 // High priority
-            },
-            { 
-                data: 'created_at',
-                responsivePriority: 5 // Medium priority
-            },
+            { data: 'name', responsivePriority: 1 },
+            { data: 'email', responsivePriority: 3 },
+            { data: 'phone', responsivePriority: 4 },
+            { data: 'address', responsivePriority: 5 },
+            { data: 'status', responsivePriority: 2 },
+            { data: 'created_at', responsivePriority: 6 },
             {
                 data: null,
                 render: function(data, type, row) {
                     return `
-                        <button class="btn-action view-btn" data-id="${row.id}" title="View"><i class="fas fa-eye text-green-500 hover:text-green-700"></i></button>
-                        <button class="btn-action edit-btn" data-id="${row.id}" title="Edit"><i class="fas fa-edit text-blue-500 hover:text-blue-700"></i></button>
-                        <button class="btn-action delete-btn" data-id="${row.id}" title="Delete"><i class="fas fa-trash-alt text-red-500 hover:text-red-700"></i></button>
+                        <button class="btn-action view-btn" data-id="${row.id || ''}" title="View"><i class="fas fa-eye text-green-500 hover:text-green-700"></i></button>
+                        <button class="btn-action edit-btn" data-id="${row.id || ''}" title="Edit"><i class="fas fa-edit text-blue-500 hover:text-blue-700"></i></button>
+                        <button class="btn-action delete-btn" data-id="${row.id || ''}" title="Delete"><i class="fas fa-trash-alt text-red-500 hover:text-red-700"></i></button>
                     `;
                 },
                 orderable: false,
-                responsivePriority: 9 // Low priority, actions shown in child row
+                responsivePriority: 1
+            }
+        ],
+        columnDefs: [
+            {
+                targets: 0, // Checkbox column
+                orderable: false,
+                createdCell: function(td, cellData, rowData, row, col) {
+                    $(td).on('click', '.select-row', function(e) {
+                        e.stopPropagation(); // Prevent row expansion on checkbox click
+                    });
+                }
             }
         ]
     });
 
-    // Function to update Delete Selected button text with selected row count
+    // Function to update Delete Selected button text
     function updateDeleteButtonText() {
         const selectedCount = $('.select-row:checked').length;
         $('#deleteAllBtn').text(`Delete Selected (${selectedCount})`);
@@ -89,17 +96,16 @@ $(document).ready(function() {
     // Reload table when filters change
     $('#statusFilter, #nameFilter, #emailFilter').on('change input', function() {
         table.ajax.reload(function() {
-            updateDeleteButtonText(); // Reset count after table reload
+            updateDeleteButtonText();
         });
     });
 
-    // Select All Checkbox (toggles rows on current page)
+    // Select All Checkbox
     $('#selectAllCheckbox').on('change', function() {
         $('.select-row').prop('checked', $(this).is(':checked'));
         updateDeleteButtonText();
     });
 
-    // Ensure select all checkbox updates when individual checkboxes change
     $(document).on('change', '.select-row', function() {
         if ($('.select-row:checked').length === $('.select-row').length) {
             $('#selectAllCheckbox').prop('checked', true);
@@ -133,7 +139,6 @@ $(document).ready(function() {
             data: { id: id },
             dataType: 'json',
             success: function(response) {
-                console.log('View response:', response);
                 if (response && response.id) {
                     $('#viewName').text(response.name || '');
                     $('#viewEmail').text(response.email || '');
@@ -148,7 +153,6 @@ $(document).ready(function() {
                 }
             },
             error: function(xhr, status, error) {
-                console.error('View AJAX error:', status, error, xhr.responseText);
                 showNotification('Error fetching supplier: ' + (xhr.responseJSON?.message || 'Unknown error'), 'error');
             }
         });
@@ -163,7 +167,6 @@ $(document).ready(function() {
             data: { id: id },
             dataType: 'json',
             success: function(response) {
-                console.log('Edit response:', response);
                 if (response && response.id) {
                     $('#supplierId').val(response.id);
                     $('#name').val(response.name || '');
@@ -178,7 +181,6 @@ $(document).ready(function() {
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Edit AJAX error:', status, error, xhr.responseText);
                 showNotification('Error fetching supplier: ' + (xhr.responseJSON?.message || 'Unknown error'), 'error');
             }
         });
@@ -207,7 +209,7 @@ $(document).ready(function() {
                 showNotification(response.message, response.status);
                 supplierModal.hide();
                 table.ajax.reload(function() {
-                    updateDeleteButtonText(); // Reset count after table reload
+                    updateDeleteButtonText();
                 });
             },
             error: function(xhr) {
@@ -229,7 +231,7 @@ $(document).ready(function() {
                 success: function(response) {
                     showNotification(response.message, response.status);
                     table.ajax.reload(function() {
-                        updateDeleteButtonText(); // Reset count after table reload
+                        updateDeleteButtonText();
                     });
                 },
                 error: function(xhr) {
@@ -260,9 +262,9 @@ $(document).ready(function() {
                 success: function(response) {
                     showNotification(response.message, response.status);
                     $('#selectAllCheckbox').prop('checked', false);
-                    $('.select-row').prop('checked', false); // Uncheck all row checkboxes
+                    $('.select-row').prop('checked', false);
                     table.ajax.reload(function() {
-                        updateDeleteButtonText(); // Reset count after table reload
+                        updateDeleteButtonText();
                     });
                 },
                 error: function(xhr) {
