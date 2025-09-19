@@ -28,7 +28,7 @@ $(document).ready(function() {
                     return `<input type="checkbox" class="select-row" value="${row.id}">`;
                 },
                 orderable: false,
-                responsivePriority: 10 // Low priority, hidden first on mobile
+                responsivePriority: 10 // Low priority for collapsing
             },
             {
                 data: null,
@@ -36,7 +36,7 @@ $(document).ready(function() {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 },
                 orderable: false,
-                responsivePriority: 8 // Medium priority
+                responsivePriority: 2 // High priority to ensure S.No is visible on mobile
             },
             { 
                 data: 'name',
@@ -44,23 +44,23 @@ $(document).ready(function() {
             },
             { 
                 data: 'email',
-                responsivePriority: 2 // High priority
-            },
-            { 
-                data: 'phone',
-                responsivePriority: 5 // Medium priority
-            },
-            { 
-                data: 'address',
-                responsivePriority: 6 // Medium priority
-            },
-            { 
-                data: 'status',
                 responsivePriority: 3 // High priority
             },
             { 
-                data: 'created_at',
+                data: 'phone',
+                responsivePriority: 6 // Medium priority
+            },
+            { 
+                data: 'address',
+                responsivePriority: 7 // Medium priority
+            },
+            { 
+                data: 'status',
                 responsivePriority: 4 // High priority
+            },
+            { 
+                data: 'created_at',
+                responsivePriority: 5 // Medium priority
             },
             {
                 data: null,

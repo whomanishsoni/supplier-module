@@ -43,7 +43,7 @@
                 <thead>
                     <tr>
                         <th><input type="checkbox" id="selectAllCheckbox"></th>
-                        <th>S.No</th>
+                        <th>#</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
