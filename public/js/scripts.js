@@ -7,8 +7,12 @@ $(document).ready(function() {
     let table = $('#suppliersTable').DataTable({
         processing: true,
         serverSide: true,
+        responsive: true, // Enable responsive extension
+        fixedColumns: {
+            leftColumns: 1 // Fix the first column (checkbox)
+        },
         ajax: {
-            url: '../api/read.php',
+            url: 'api/read.php',
             type: 'GET',
             data: function (d) {
                 d.status_filter = $('#statusFilter').val();
@@ -23,21 +27,41 @@ $(document).ready(function() {
                 render: function(data, type, row) {
                     return `<input type="checkbox" class="select-row" value="${row.id}">`;
                 },
-                orderable: false
+                orderable: false,
+                responsivePriority: 10 // Low priority, hidden first on mobile
             },
             {
                 data: null,
                 render: function(data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 },
-                orderable: false
+                orderable: false,
+                responsivePriority: 8 // Medium priority
             },
-            { data: 'name' },
-            { data: 'email' },
-            { data: 'phone' },
-            { data: 'address' },
-            { data: 'status' },
-            { data: 'created_at' },
+            { 
+                data: 'name',
+                responsivePriority: 1 // High priority, always visible
+            },
+            { 
+                data: 'email',
+                responsivePriority: 2 // High priority
+            },
+            { 
+                data: 'phone',
+                responsivePriority: 5 // Medium priority
+            },
+            { 
+                data: 'address',
+                responsivePriority: 6 // Medium priority
+            },
+            { 
+                data: 'status',
+                responsivePriority: 3 // High priority
+            },
+            { 
+                data: 'created_at',
+                responsivePriority: 4 // High priority
+            },
             {
                 data: null,
                 render: function(data, type, row) {
@@ -47,7 +71,8 @@ $(document).ready(function() {
                         <button class="btn-action delete-btn" data-id="${row.id}" title="Delete"><i class="fas fa-trash-alt text-red-500 hover:text-red-700"></i></button>
                     `;
                 },
-                orderable: false
+                orderable: false,
+                responsivePriority: 9 // Low priority, actions shown in child row
             }
         ]
     });
@@ -103,7 +128,7 @@ $(document).ready(function() {
     $(document).on('click', '.view-btn', function() {
         const id = $(this).data('id');
         $.ajax({
-            url: '../api/single_read.php',
+            url: 'api/single_read.php',
             type: 'GET',
             data: { id: id },
             dataType: 'json',
@@ -133,7 +158,7 @@ $(document).ready(function() {
     $(document).on('click', '.edit-btn', function() {
         const id = $(this).data('id');
         $.ajax({
-            url: '../api/single_read.php',
+            url: 'api/single_read.php',
             type: 'GET',
             data: { id: id },
             dataType: 'json',
@@ -170,7 +195,7 @@ $(document).ready(function() {
             address: $('#address').val(),
             status: $('#status').val()
         };
-        const url = id ? '../api/update.php' : '../api/create.php';
+        const url = id ? 'api/update.php' : 'api/create.php';
         if (id) data.id = id;
 
         $.ajax({
@@ -197,7 +222,7 @@ $(document).ready(function() {
         if (confirm('Are you sure you want to delete this supplier?')) {
             const id = $(this).data('id');
             $.ajax({
-                url: '../api/delete.php',
+                url: 'api/delete.php',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ id: id }),
@@ -228,7 +253,7 @@ $(document).ready(function() {
 
         if (confirm('Are you sure you want to delete selected suppliers?')) {
             $.ajax({
-                url: '../api/bulk_delete.php',
+                url: 'api/bulk_delete.php',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ ids: selectedIds }),
