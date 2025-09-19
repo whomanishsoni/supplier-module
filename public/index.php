@@ -15,15 +15,25 @@
         <h1 class="text-3xl font-bold mb-6">Supplier Management</h1>
         <div class="mb-4">
             <button id="addSupplierBtn" class="bg-blue-500 text-white px-4 py-2 rounded">Add Supplier</button>
-            <button id="deleteAllBtn" class="bg-red-500 text-white px-4 py-2 rounded ml-2">Delete Selected</button>
+            <button id="deleteAllBtn" class="bg-red-500 text-white px-4 py-2 rounded ml-2">Delete Selected (0)</button>
         </div>
-        <div class="mb-4">
-            <label for="statusFilter" class="mr-2">Filter by Status:</label>
-            <select id="statusFilter" class="px-2 py-1 border rounded">
-                <option value="">All</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-            </select>
+        <div class="mb-4 flex flex-wrap gap-4">
+            <div>
+                <label for="nameFilter" class="mr-2">Filter by Name:</label>
+                <input type="text" id="nameFilter" class="px-2 py-1 border rounded" placeholder="Enter name">
+            </div>
+            <div>
+                <label for="emailFilter" class="mr-2">Filter by Email:</label>
+                <input type="text" id="emailFilter" class="px-2 py-1 border rounded" placeholder="Enter email">
+            </div>
+            <div>
+                <label for="statusFilter" class="mr-2">Filter by Status:</label>
+                <select id="statusFilter" class="px-2 py-1 border rounded">
+                    <option value="">All</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
         </div>
         <table id="suppliersTable" class="table table-bordered table-striped">
             <thead>

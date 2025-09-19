@@ -12,6 +12,8 @@ $(document).ready(function() {
             type: 'GET',
             data: function (d) {
                 d.status_filter = $('#statusFilter').val();
+                d.name_filter = $('#nameFilter').val();
+                d.email_filter = $('#emailFilter').val();
             }
         },
         order: [[7, 'desc']], // Default sort by created_at (column index 7) in DESC order
@@ -59,8 +61,8 @@ $(document).ready(function() {
     // Initialize Delete Selected button text
     updateDeleteButtonText();
 
-    // Reload table when status filter changes
-    $('#statusFilter').change(function() {
+    // Reload table when filters change
+    $('#statusFilter, #nameFilter, #emailFilter').on('change input', function() {
         table.ajax.reload(function() {
             updateDeleteButtonText(); // Reset count after table reload
         });

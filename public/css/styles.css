@@ -18,3 +18,7 @@
 .btn-action i {
     @apply text-lg;
 }
+
+#statusFilter, #nameFilter, #emailFilter {
+    @apply px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500;
+}

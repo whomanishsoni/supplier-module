@@ -7,12 +7,25 @@ $draw = $_GET['draw'] ?? 1;
 $start = $_GET['start'] ?? 0;
 $length = $_GET['length'] ?? 10;
 $searchValue = $_GET['search']['value'] ?? '';
-$orderColumnIndex = $_GET['order'][0]['column'] ?? 0;
-$orderDir = $_GET['order'][0]['dir'] ?? 'asc';
+$orderColumnIndex = $_GET['order'][0]['column'] ?? 7; // Default to created_at (index 7)
+$orderDir = $_GET['order'][0]['dir'] ?? 'desc'; // Default to DESC
 $statusFilter = $_GET['status_filter'] ?? '';
+$nameFilter = $_GET['name_filter'] ?? '';
+$emailFilter = $_GET['email_filter'] ?? '';
 
-$columns = ['id', 'name', 'email', 'phone', 'address', 'status', 'created_at'];
-$orderBy = $columns[$orderColumnIndex] ?? 'id';
+// Map DataTable column indexes to database columns
+$columns = [
+    0 => null, // Checkbox column (not orderable)
+    1 => null, // Counter column (not orderable)
+    2 => 'name',
+    3 => 'email',
+    4 => 'phone',
+    5 => 'address',
+    6 => 'status',
+    7 => 'created_at',
+    8 => null // Actions column (not orderable)
+];
+$orderBy = $columns[$orderColumnIndex] ?? 'created_at';
 
 // Build WHERE conditions
 $whereConditions = [];
@@ -26,6 +39,16 @@ if (!empty($searchValue)) {
 if (!empty($statusFilter)) {
     $whereConditions[] = "status = :status_filter";
     $params[':status_filter'] = $statusFilter;
+}
+
+if (!empty($nameFilter)) {
+    $whereConditions[] = "name LIKE :name_filter";
+    $params[':name_filter'] = "%$nameFilter%";
+}
+
+if (!empty($emailFilter)) {
+    $whereConditions[] = "email LIKE :email_filter";
+    $params[':email_filter'] = "%$emailFilter%";
 }
 
 $where = '';
