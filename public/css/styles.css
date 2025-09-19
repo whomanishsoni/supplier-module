@@ -1,0 +1,20 @@
+/* public/css/styles.css */
+#notification.success {
+    @apply bg-green-500 text-white;
+}
+
+#notification.error {
+    @apply bg-red-500 text-white;
+}
+
+.table th, .table td {
+    @apply px-4 py-2;
+}
+
+.btn-action {
+    @apply inline-block px-2 py-1 mr-2;
+}
+
+.btn-action i {
+    @apply text-lg;
+}
