@@ -21,21 +21,21 @@
         </div>
         <div class="mb-4 filter-container">
             <div class="flex flex-nowrap items-center gap-2 sm:gap-4 overflow-x-auto pb-2">
-                <div class="flex items-center gap-2">
-                    <label for="statusFilter" class="text-sm font-medium">Status:</label>
-                    <select id="statusFilter" class="px-2 py-1 border rounded text-sm w-full sm:w-auto min-w-[120px]">
+                <div class="flex items-center gap-1 sm:gap-2">
+                    <label for="statusFilter" class="text-sm font-medium whitespace-nowrap">Status:</label>
+                    <select id="statusFilter" class="px-2 py-1 border rounded text-sm w-full sm:w-auto min-w-[100px]">
                         <option value="">All</option>
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
                     </select>
                 </div>
-                <div class="flex items-center gap-2">
-                    <label for="nameFilter" class="text-sm font-medium">Name:</label>
-                    <input type="text" id="nameFilter" class="px-2 py-1 border rounded text-sm w-full sm:w-auto min-w-[120px]" placeholder="Enter name">
+                <div class="flex items-center gap-1 sm:gap-2">
+                    <label for="nameFilter" class="text-sm font-medium whitespace-nowrap">Name:</label>
+                    <input type="text" id="nameFilter" class="px-2 py-1 border rounded text-sm w-full sm:w-auto min-w-[100px]" placeholder="Enter name">
                 </div>
-                <div class="flex items-center gap-2">
-                    <label for="emailFilter" class="text-sm font-medium">Email:</label>
-                    <input type="text" id="emailFilter" class="px-2 py-1 border rounded text-sm w-full sm:w-auto min-w-[120px]" placeholder="Enter email">
+                <div class="flex items-center gap-1 sm:gap-2">
+                    <label for="emailFilter" class="text-sm font-medium whitespace-nowrap">Email:</label>
+                    <input type="text" id="emailFilter" class="px-2 py-1 border rounded text-sm w-full sm:w-auto min-w-[100px]" placeholder="Enter email">
                 </div>
             </div>
         </div>

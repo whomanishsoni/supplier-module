@@ -37,6 +37,14 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control {
     @apply w-12 text-center;
 }
 
+.dataTables_wrapper {
+    @apply overflow-x-auto;
+}
+
+table.dataTable {
+    @apply w-full;
+}
+
 @media (max-width: 640px) {
     .table th, .table td {
         @apply px-2 py-1 text-xs;
@@ -55,7 +63,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control {
     }
 
     #statusFilter, #nameFilter, #emailFilter {
-        @apply w-full sm:w-auto min-w-[120px];
+        @apply w-full sm:w-auto min-w-[100px] max-w-[150px];
     }
 
     /* Adjust table for mobile */
@@ -69,15 +77,31 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control {
 
     /* Child row styling for mobile */
     table.dataTable.dtr-inline.collapsed > tbody > tr > td.child {
-        @apply bg-gray-50 p-2;
+        @apply bg-gray-50 p-2 text-sm;
     }
 
-    table.dataTable.dtr-inline.collapsed > tbody > tr > td.child table {
+    table.dataTable.dtr-inline.collapsed > tbody > tr > td.child p {
+        @apply mb-1;
+    }
+
+    table.dataTable.dtr-inline.collapsed > tbody > tr > td.child strong {
+        @apply font-bold;
+    }
+
+    table.dataTable.dtr-inline.collapsed > tbody > tr > td {
+        @apply p-1;
+    }
+
+    table.dataTable.dtr-inline.collapsed > tbody > tr > td.child {
         @apply text-xs;
     }
 
-    /* Ensure actions remain accessible on mobile */
-    table.dataTable.dtr-inline.collapsed > tbody > tr > td {
-        @apply p-1;
+    /* Prevent horizontal scroll by ensuring table fits */
+    .dataTables_wrapper {
+        @apply overflow-x-hidden;
+    }
+
+    table.dataTable {
+        @apply min-w-full;
     }
 }

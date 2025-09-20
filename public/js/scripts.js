@@ -11,16 +11,20 @@ $(document).ready(function() {
             details: {
                 type: 'inline',
                 renderer: function(api, rowIdx, columns) {
-                    let data = '';
-                    $.each(columns, function(i, col) {
-                        if (col.columnIndex === 0 || col.columnIndex === 8 || col.hidden) return true; // Skip checkbox and Actions
-                        console.log('Column Index:', col.columnIndex, 'Title:', col.title, 'Data:', col.data); // Debug log
-                        data += '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
-                            '<td class="font-bold">' + col.title + ':</td>' +
-                            '<td>' + (col.data || 'N/A') + '</td>' +
-                            '</tr>';
-                    });
-                    return data ? $('<table class="w-full"/>').append(data) : false;
+                    var data = api.row(rowIdx).data();
+                    if (!data) return false;
+
+                    var detailData = `
+                        <div class="p-2 bg-gray-50">
+                            <p class="mb-1"><strong>Name:</strong> ${data.name || 'N/A'}</p>
+                            <p class="mb-1"><strong>Email:</strong> ${data.email || 'N/A'}</p>
+                            <p class="mb-1"><strong>Phone:</strong> ${data.phone || 'N/A'}</p>
+                            <p class="mb-1"><strong>Address:</strong> ${data.address || 'N/A'}</p>
+                            <p class="mb-1"><strong>Status:</strong> ${data.status || 'N/A'}</p>
+                            <p class="mb-1"><strong>Created At:</strong> ${data.created_at || 'N/A'}</p>
+                        </div>
+                    `;
+                    return $(detailData);
                 }
             }
         },
@@ -81,7 +85,11 @@ $(document).ready(function() {
                     });
                 }
             }
-        ]
+        ],
+        responsive: true,
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100],
+        dom: 'lfrtip' // Default layout with length, filter, table, info, pagination
     });
 
     // Function to update Delete Selected button text
