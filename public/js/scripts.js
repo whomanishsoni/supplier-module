@@ -51,6 +51,11 @@ $(document).ready(function() {
     setTimeout(() => notification.fadeOut(), 3000);
   }
 
+  // Cleanup old dropdowns
+  function cleanupDropdowns() {
+    $('[id^="dropdown-"]').remove();
+  }
+
   // Fetch and render table data
   function renderTable() {
     console.log('Rendering table, page:', currentPage, 'selectedRows:', selectedRows);
@@ -80,6 +85,7 @@ $(document).ready(function() {
         }
 
         tableBody.empty();
+        cleanupDropdowns(); // Remove old dropdowns before rendering new ones
         if (response.data.length === 0) {
           tableBody.html(`<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">No results found</td></tr>`);
         } else {
@@ -111,40 +117,11 @@ $(document).ready(function() {
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                       </svg>
                     </button>
-                    <button data-dropdown-toggle="dropdown-${supplierId}" class="p-1.5 sm:p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors" title="Actions" aria-label="Actions for supplier ${supplierId}">
+                    <button id="dropdown-trigger-${supplierId}" class="p-1.5 sm:p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors" title="Actions" aria-label="Actions for supplier ${supplierId}">
                       <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                       </svg>
                     </button>
-                    <div id="dropdown-${supplierId}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                      <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdown-${supplierId}">
-                        <li>
-                          <button data-action="show" data-id="${supplierId}" class="flex items-center w-full px-4 py-2 hover:bg-gray-100">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            Show
-                          </button>
-                        </li>
-                        <li>
-                          <button data-action="edit" data-id="${supplierId}" class="flex items-center w-full px-4 py-2 hover:bg-gray-100">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            Edit
-                          </button>
-                        </li>
-                        <li>
-                          <button data-action="delete" data-id="${supplierId}" class="flex items-center w-full px-4 py-2 hover:bg-gray-100 text-red-600">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                            Delete
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
                   </div>
                 </td>
               </tr>
@@ -159,6 +136,45 @@ $(document).ready(function() {
               </tr>
             `;
             tableBody.append(row);
+
+            // Initialize dropdown after appending row
+            const triggerEl = document.getElementById(`dropdown-trigger-${supplierId}`);
+            const dropdownContent = `
+              <div id="dropdown-${supplierId}" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdown-${supplierId}">
+                  <li>
+                    <button data-action="show" data-id="${supplierId}" class="flex items-center w-full px-4 py-2 hover:bg-gray-100">
+                      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      Show
+                    </button>
+                  </li>
+                  <li>
+                    <button data-action="edit" data-id="${supplierId}" class="flex items-center w-full px-4 py-2 hover:bg-gray-100">
+                      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      Edit
+                    </button>
+                  </li>
+                  <li>
+                    <button data-action="delete" data-id="${supplierId}" class="flex items-center w-full px-4 py-2 hover:bg-gray-100 text-red-600">
+                      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      Delete
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            `;
+            $('body').append(dropdownContent);
+            new Dropdown(document.getElementById(`dropdown-${supplierId}`), triggerEl, {
+              placement: 'bottom-end',
+              appendTo: document.body
+            });
           });
         }
 
@@ -239,33 +255,6 @@ $(document).ready(function() {
 
         // Update select all checkbox
         selectAllCheckbox.prop('checked', response.data.length > 0 && response.data.every(supplier => selectedRows.includes(String(supplier.id))));
-        console.log('Select All checkbox state:', selectAllCheckbox.prop('checked'));
-
-        // Update delete selected button
-        deleteSelectedBtn.prop('disabled', selectedRows.length === 0);
-        deleteSelectedBtn.attr('title', `Delete Selected (${selectedRows.length})`);
-
-        // Reinitialize Flowbite dropdowns
-        if (window.initFlowbite) {
-          console.log('Reinitializing Flowbite');
-          window.initFlowbite();
-        } else {
-          console.warn('Flowbite not loaded');
-        }
-
-        // Rebind row checkbox event listeners
-        $('.row-checkbox').off('click').on('click', function() {
-          const id = String($(this).data('id'));
-          console.log('Row checkbox clicked, ID:', id);
-          if (id) {
-            selectedRows = selectedRows.includes(id) ? selectedRows.filter(rowId => rowId !== id) : [...selectedRows, id];
-            $(this).prop('checked', selectedRows.includes(id)); // Force checkbox state
-            console.log('Selected Rows:', selectedRows);
-            renderTable();
-          } else {
-            console.warn('Invalid row checkbox ID:', $(this).data('id'));
-          }
-        });
       },
       error: function(xhr) {
         console.log('API error:', xhr.responseText);
@@ -366,7 +355,8 @@ $(document).ready(function() {
     }).get().filter(id => id !== null) : [];
     checkboxes.prop('checked', isChecked); // Force checkbox state
     console.log('Selected Rows:', selectedRows);
-    renderTable();
+    deleteSelectedBtn.prop('disabled', selectedRows.length === 0);
+    deleteSelectedBtn.attr('title', `Delete Selected (${selectedRows.length})`);
   });
 
   deleteSelectedBtn.on('click', function() {
@@ -395,6 +385,18 @@ $(document).ready(function() {
 
   addSupplierBtn.on('click', () => openModal('create'));
 
+  // Close modal when clicking outside
+  supplierModal.on('click', function(e) {
+    if (e.target === this) {
+      $(this).addClass('hidden');
+    }
+  });
+  viewSupplierModal.on('click', function(e) {
+    if (e.target === this) {
+      $(this).addClass('hidden');
+    }
+  });
+
   modalClose.on('click', () => supplierModal.addClass('hidden'));
   viewModalClose.on('click', () => viewSupplierModal.addClass('hidden'));
 
@@ -419,7 +421,7 @@ $(document).ready(function() {
       success: function(response) {
         if (response && response.message && response.status) {
           showNotification(response.message, response.status);
-          supplierModal.addClass('hidden');
+          supplierModal.addClass('hidden'); // Close modal after successful submission
           currentPage = 1;
           renderTable();
         } else {
@@ -472,10 +474,29 @@ $(document).ready(function() {
         console.log('Error fetching total pages:', xhr.responseText);
       }
     });
-  }).on('click', 'button[data-action]', function() {
+  }).on('click', 'th[data-sort]', function() {
+    const key = $(this).data('sort');
+    handleSort(key);
+  }).on('click', '.toggle-details', function() {
+    const id = String($(this).data('id'));
+    const detailsRow = $(`.details-row[data-id="${id}"]`);
+    const isVisible = detailsRow.is(':visible');
+    detailsRow.toggleClass('hidden');
+    $(this).find('.detail-icon').html(
+      isVisible
+        ? `<svg class="w-4 h-4 sm:w-5 sm:h-5 detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>`
+        : `<svg class="w-4 h-4 sm:w-5 sm:h-5 detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" /></svg>`
+    );
+    $(this).attr('aria-expanded', !isVisible);
+    detailsRow.attr('aria-hidden', isVisible);
+  });
+
+  // Delegated event listener for dropdown action buttons
+  $(document).on('click', 'button[data-action]', function(e) {
     const btn = $(this);
     const id = String(btn.data('id'));
     const action = btn.data('action');
+    console.log('Action button clicked:', action, 'ID:', id);
 
     if (action === 'show' || action === 'edit') {
       $.ajax({
@@ -486,6 +507,7 @@ $(document).ready(function() {
         success: function(response) {
           if (response && response.id) {
             openModal(action, response);
+            $('#dropdown-' + id).addClass('hidden'); // Hide dropdown after action
           } else {
             showNotification(response.message || 'Error: Supplier not found', 'error');
           }
@@ -510,6 +532,7 @@ $(document).ready(function() {
             selectedRows = selectedRows.filter(rowId => rowId !== id);
             currentPage = 1;
             renderTable();
+            $('#dropdown-' + id).addClass('hidden'); // Hide dropdown after action
           },
           error: function(xhr) {
             showNotification('Error deleting supplier: ' + (xhr.responseJSON?.message || 'Unknown error'), 'error');
@@ -517,21 +540,22 @@ $(document).ready(function() {
         });
       }
     }
-  }).on('click', 'th[data-sort]', function() {
-    const key = $(this).data('sort');
-    handleSort(key);
-  }).on('click', '.toggle-details', function() {
+  });
+
+  // Rebind row checkbox event listeners
+  tableBody.on('click', '.row-checkbox', function() {
     const id = String($(this).data('id'));
-    const detailsRow = $(`.details-row[data-id="${id}"]`);
-    const isVisible = detailsRow.is(':visible');
-    detailsRow.toggleClass('hidden');
-    $(this).find('.detail-icon').html(
-      isVisible
-        ? `<svg class="w-4 h-4 sm:w-5 sm:h-5 detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>`
-        : `<svg class="w-4 h-4 sm:w-5 sm:h-5 detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" /></svg>`
-    );
-    $(this).attr('aria-expanded', !isVisible);
-    detailsRow.attr('aria-hidden', isVisible);
+    console.log('Row checkbox clicked, ID:', id);
+    if (id) {
+      selectedRows = selectedRows.includes(id) ? selectedRows.filter(rowId => rowId !== id) : [...selectedRows, id];
+      $(this).prop('checked', selectedRows.includes(id)); // Force checkbox state
+      console.log('Selected Rows:', selectedRows);
+      deleteSelectedBtn.prop('disabled', selectedRows.length === 0);
+      deleteSelectedBtn.attr('title', `Delete Selected (${selectedRows.length})`);
+      selectAllCheckbox.prop('checked', tableBody.find('.row-checkbox').length > 0 && tableBody.find('.row-checkbox').length === selectedRows.length);
+    } else {
+      console.warn('Invalid row checkbox ID:', $(this).data('id'));
+    }
   });
 
   // Initial render

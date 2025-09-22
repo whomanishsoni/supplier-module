@@ -56,7 +56,7 @@
               id="status-filter"
               class="w-20 sm:w-36 px-2 sm:px-3 py-1 sm:py-1.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
             >
-              <option value="">All</option>
+              <option value="">All Statuses</option>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
@@ -86,24 +86,26 @@
       </div>
     </div>
 
-    <!-- Table -->
-    <div class="relative overflow-x-auto mt-4">
-      <table id="data-table" class="w-full text-xs sm:text-sm text-left text-gray-500">
-        <thead class="text-xs uppercase bg-gray-50">
-          <tr>
-            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 w-12">
-              <input id="select-all" type="checkbox" class="w-4 h-4" />
-            </th>
-            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 cursor-pointer" data-sort="id">ID <span class="sort-icon"></span></th>
-            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 cursor-pointer" data-sort="name">Name <span class="sort-icon"></span></th>
-            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 cursor-pointer hidden sm:table-cell" data-sort="email">Email <span class="sort-icon"></span></th>
-            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 cursor-pointer hidden sm:table-cell" data-sort="phone">Phone <span class="sort-icon"></span></th>
-            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 cursor-pointer" data-sort="status">Status <span class="sort-icon"></span></th>
-            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="table-body"></tbody>
-      </table>
+    <!-- Table Wrapper to Prevent Dropdown Clipping -->
+    <div class="relative">
+      <div class="overflow-x-hidden mt-4">
+        <table id="data-table" class="w-full text-xs sm:text-sm text-left text-gray-500">
+          <thead class="text-xs uppercase bg-gray-50">
+            <tr>
+              <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 w-12">
+                <input id="select-all" type="checkbox" class="w-4 h-4" />
+              </th>
+              <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 cursor-pointer" data-sort="id">ID <span class="sort-icon"></span></th>
+              <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 cursor-pointer" data-sort="name">Name <span class="sort-icon"></span></th>
+              <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 cursor-pointer hidden sm:table-cell" data-sort="email">Email <span class="sort-icon"></span></th>
+              <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 cursor-pointer hidden sm:table-cell" data-sort="phone">Phone <span class="sort-icon"></span></th>
+              <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 cursor-pointer" data-sort="status">Status <span class="sort-icon"></span></th>
+              <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Pagination and Page Length -->

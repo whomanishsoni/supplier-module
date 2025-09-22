@@ -35,6 +35,9 @@
   transition: all 0.3s ease;
   font-size: 0.875rem; /* Slightly larger text for better readability */
 }
+#data-table td:last-child {
+  position: relative; /* Ensure actions column has proper context for dropdown */
+}
 @media (max-width: 639px) {
   .details-row {
     padding-left: 1.5rem;
@@ -75,4 +78,7 @@
     font-size: 1rem; /* Standard text size for desktop */
     padding: 0.75rem 1.5rem; /* Standard padding for desktop */
   }
+}
+.dropdown {
+  z-index: 1000; /* Ensure dropdown appears above all other content */
 }
