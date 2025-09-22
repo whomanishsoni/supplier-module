@@ -1,0 +1,78 @@
+.sort-icon {
+  display: inline-block;
+  margin-left: 4px;
+  transition: transform 0.2s ease;
+}
+.sort-asc {
+  transform: rotate(180deg);
+}
+.sort-desc {
+  transform: rotate(0deg);
+}
+#notification {
+  min-width: 200px;
+  max-width: 90%;
+  transition: opacity 0.3s ease-in-out;
+}
+#notification.success {
+  background-color: #10b981; /* Tailwind's green-500 */
+  color: #ffffff; /* White text for contrast */
+}
+#notification.error {
+  background-color: #ef4444; /* Tailwind's red-500 */
+  color: #ffffff; /* White text for contrast */
+}
+#notification-close {
+  transition: color 0.2s ease;
+}
+#notification-close:hover {
+  color: #e5e7eb; /* Tailwind's gray-200 */
+}
+.detail-icon {
+  transition: transform 0.2s ease;
+}
+.details-row {
+  transition: all 0.3s ease;
+  font-size: 0.875rem; /* Slightly larger text for better readability */
+}
+@media (max-width: 639px) {
+  .details-row {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  #data-table {
+    min-width: 320px; /* Ensure table is not too cramped on small screens */
+  }
+  #notification {
+    top: 4rem; /* Adjusted to account for smaller header height on mobile */
+    right: 0.5rem;
+    min-width: 160px;
+    font-size: 0.875rem; /* Smaller text for mobile */
+    padding: 0.5rem 1rem; /* Reduced padding for mobile */
+  }
+}
+@media (min-width: 640px) {
+  #data-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  #data-table th,
+  #data-table td {
+    border-bottom: 1px solid #e5e7eb;
+  }
+  #data-table tr:last-child td {
+    border-bottom: none;
+  }
+  #notification {
+    top: 5rem; /* Adjusted to account for larger header height on desktop */
+    right: 1rem;
+    min-width: 200px;
+    font-size: 1rem; /* Standard text size for desktop */
+    padding: 0.75rem 1.5rem; /* Standard padding for desktop */
+  }
+}
