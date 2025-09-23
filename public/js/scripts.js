@@ -56,10 +56,29 @@ $(document).ready(function() {
     $('[id^="dropdown-"]').remove();
   }
 
+  // NEW: Debounce function to delay execution until user stops typing
+  function debounce(func, delay) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), delay);
+    };
+  }
+
+  // NEW: Variable to track the current AJAX request for aborting
+  let currentAjax = null;
+
   // Fetch and render table data
   function renderTable() {
     console.log('Rendering table, page:', currentPage, 'selectedRows:', selectedRows);
-    $.ajax({
+
+    // NEW: Abort any pending AJAX request to prevent race conditions
+    if (currentAjax) {
+      currentAjax.abort();
+      console.log('Aborted previous AJAX request');
+    }
+
+    currentAjax = $.ajax({
       url: 'api/read.php',
       type: 'GET',
       data: {
@@ -262,6 +281,10 @@ $(document).ready(function() {
         tableBody.html(`<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">Error loading data</td></tr>`);
         pagination.empty();
         paginationInfo.text('');
+      },
+      complete: function() {
+        // NEW: Reset the currentAjax after completion (success, error, or abort)
+        currentAjax = null;
       }
     });
   }
@@ -311,24 +334,29 @@ $(document).ready(function() {
     }
   }
 
+  // NEW: Debounced event handlers for search inputs
+  const debouncedGlobalSearch = debounce(() => {
+    globalSearch = globalSearchInput.val();
+    currentPage = 1;
+    renderTable();
+  }, 300);
+
+  const debouncedNameSearch = debounce(() => {
+    nameSearch = nameSearchInput.val();
+    currentPage = 1;
+    renderTable();
+  }, 300);
+
+  const debouncedEmailSearch = debounce(() => {
+    emailSearch = emailSearchInput.val();
+    currentPage = 1;
+    renderTable();
+  }, 300);
+
   // Event listeners
-  globalSearchInput.on('input', function() {
-    globalSearch = $(this).val();
-    currentPage = 1;
-    renderTable();
-  });
-
-  nameSearchInput.on('input', function() {
-    nameSearch = $(this).val();
-    currentPage = 1;
-    renderTable();
-  });
-
-  emailSearchInput.on('input', function() {
-    emailSearch = $(this).val();
-    currentPage = 1;
-    renderTable();
-  });
+  globalSearchInput.on('input', debouncedGlobalSearch);
+  nameSearchInput.on('input', debouncedNameSearch);
+  emailSearchInput.on('input', debouncedEmailSearch);
 
   statusFilterSelect.on('change', function() {
     statusFilter = $(this).val();
